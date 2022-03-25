@@ -27,8 +27,7 @@ class FullscreenTriangleState: public our::State {
         // Then we get the path for vertex and fragment shader
         // We used "assets/shaders/fullscreen.vert" and "assets/shaders/circle.frag" as the defaults if the paths are not defined
         std::string vertex_shader_path = config.value("vertex-shader", "assets/shaders/fullscreen.vert");
-        std::string fragment_shader_path = config.value("fragment-shader", "assets/shaders/circle.frag");
-
+        std::string fragment_shader_path = config.value("fragment-shader", "assets/shaders/square.frag");
         // Here we create a shader, attach the vertex and fragment shader to it then link
         program.create();
         program.attach(vertex_shader_path, GL_VERTEX_SHADER);
