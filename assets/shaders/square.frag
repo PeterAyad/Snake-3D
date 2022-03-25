@@ -13,7 +13,7 @@ uniform vec4 outside_color = vec4(0.0, 0.0, 0.0, 1.0);
 
 void main(){
     //TODO: Write code that will draw the square
-    float inf_n_dist = max(abs(gl_FragCoord.x - center.x) , abs(l_FragCoord.y - center.y))
+    float inf_n_dist = max(abs(gl_FragCoord.x - center.x) , abs(l_FragCoord.y - center.y));
     if(inf_n_dist <= length/2){
         frag_color = inside_color;
     } else {
