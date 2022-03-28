@@ -11,12 +11,13 @@ class ClearColorState: public our::State {
         //To know how read data from a nlohmann::json object, 
         //look at the following documentation: https://json.nlohmann.me/features/element_access/
 
+        // Get scene: clear-color json object
         nlohmann::json clearColor = getApp()->getConfig().at("scene").at("clear-color");
+        // Get red, green, blue, alpha values form the json object
         float r = clearColor["r"].get<float>();
         float g = clearColor["g"].get<float>();
         float b = clearColor["b"].get<float>();
         float a = clearColor["a"].get<float>();
-        
         // set color you want to clear the buffers with
         glClearColor(r,g,b,a);
     }
