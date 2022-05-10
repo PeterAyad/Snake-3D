@@ -55,7 +55,7 @@ namespace our
             glVertexAttribPointer(ATTRIB_LOC_POSITION, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
             glEnableVertexAttribArray(ATTRIB_LOC_POSITION);
             // Vertex Colors
-            glVertexAttribPointer(ATTRIB_LOC_COLOR, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(Vertex), (void *)sizeof(glm::vec3));
+            glVertexAttribPointer(ATTRIB_LOC_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void *)sizeof(glm::vec3));
             glEnableVertexAttribArray(ATTRIB_LOC_COLOR);
             // Vertex Texture Coords
             glVertexAttribPointer(ATTRIB_LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(sizeof(Color) + sizeof(glm::vec3)));
