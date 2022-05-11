@@ -42,7 +42,36 @@ namespace our {
         // For example, if faceCulling.enabled is true, you should call glEnable(GL_CULL_FACE), otherwise, you should call glDisable(GL_CULL_FACE)
         void setup() const {
             //TODO: (Req 3) Write this function
+            //Face culling
+            if(faceCulling.enabled == true)
+            {
+                glEnable(GL_CULL_FACE);
+                glCullFace(faceCulling.culledFace);
+                glFrontFace(faceCulling.frontFace);
+            } 
+            else
+                glDisable(GL_CULL_FACE);
+        
+            //Depth Testing
+            if(depthTesting.enabled == true)
+            {
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(depthTesting.function);
+            }
+            else
+                glDisable(GL_DEPTH_TEST);
+
+            //Blending 
+            if(blending.enabled == true)
+            {
+                glEnable(GL_BLEND);
+                glBlendEquation(blending.equation);
+                glBlendFunc(blending.sourceFactor, blending.destinationFactor);
+            }
+            else
+                glDisable(GL_BLEND);
         }
+
 
         // Given a json object, this function deserializes a PipelineState structure
         void deserialize(const nlohmann::json& data);
