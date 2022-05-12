@@ -70,6 +70,10 @@ namespace our {
             }
             else
                 glDisable(GL_BLEND);
+
+            //Depth and color mask
+            glDepthMask(depthMask);
+            glColorMask(colorMask[0],colorMask[1],colorMask[2],colorMask[3]);
         }
 
 
