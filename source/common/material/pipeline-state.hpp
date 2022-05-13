@@ -45,6 +45,7 @@ namespace our {
             //Depth and color mask
             glDepthMask(depthMask);
             glColorMask(colorMask[0],colorMask[1],colorMask[2],colorMask[3]);
+            
             //Face culling
             if(faceCulling.enabled == true)
             {
