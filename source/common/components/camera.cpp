@@ -36,10 +36,9 @@ namespace our {
         // - the up direction which is the vector (0,1,0) but after being transformed by M
         // then you can use glm::lookAt
 
-        glm::vec4 eye = glm::vec4(0,0,0,0) * M ;
-        glm::vec4 center = glm::vec4(0,0,-1,0) * M ;
-        glm::vec4 up = glm::vec4(0,1,0,0) * M ;
-
+        glm::vec4 eye = M * glm::vec4(0,0,0,1) ;
+        glm::vec4 center = M * glm::vec4(0,0,-1,1) ;
+        glm::vec4 up = M * glm::vec4(0,1,0,1)  ;
         glm::mat4 V= glm::lookAt(
             glm::vec3(eye[0],eye[1],eye[2]),   //camera position
             glm::vec3(center[0],center[1],center[2]),   //gaze direction(where do i look)
