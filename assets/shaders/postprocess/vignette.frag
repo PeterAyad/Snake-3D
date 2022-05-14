@@ -11,7 +11,7 @@ out vec4 frag_color;
 // Vignette is a postprocessing effect that darkens the corners of the screen
 // to grab the attention of the viewer towards the center of the screen
 
-void main(){
+void main() {
     //TODO: Modify this shader to apply vignette
     // To apply vignette, divide the scene color
     // by 1 + the squared length of the 2D pixel location the NDC space
@@ -19,7 +19,15 @@ void main(){
     // while the texture coordinate space ranges from 0 to 1
     // We have the pixel's texture coordinate, how can we compute its location in the NDC space?
 
-    float x=tex_coord.x*2-1;
-    float y=tex_coord.y*2-1;
-    frag_color = texture(tex,tex_coord)/(1+x*x+y*y);
+    // To get pixel location in the NDC space, we need to map the texture coordinate
+    // to the range of -1 to 1
+
+    // 1. stretch the texture coordinate to the range of -1 to 1 (multiply by 2)
+    float x = tex_coord.x * 2 - 1;
+    // 2. shift from the range of 0 to 1 to the range of -1 to 1 (subtract 1)
+    float y = tex_coord.y * 2 - 1;
+
+    // 3. compute the squared length of the 2D pixel location in the NDC space
+    float squared_length = x * x + y * y;
+    frag_color = texture(tex, tex_coord) / (1 + squared_length);
 }

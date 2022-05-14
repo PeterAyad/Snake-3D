@@ -15,17 +15,22 @@ out vec4 frag_color;
 // differently based on its wavelength. In this shader, we will implement a
 // cheap version of that effect 
 
-void main(){
+void main() {
     //TODO: Modify this shader to apply chromatic abberation
     // To apply this effect, we only read the green channel from the correct pixel (as defined by tex_coord)
     // To get the red channel, we move by amount STRENGTH to the left then sample another pixel from which we take the red channel
     // To get the blue channel, we move by amount STRENGTH to the right then sample another pixel from which we take the blue channel
-    vec4 sampledTex=texture(tex,tex_coord);
-    
-    vec2 shiftedLeftTexCoord=vec2(tex_coord.x-STRENGTH,tex_coord.y);
-    vec4 sampledTexLeft=texture(tex,shiftedLeftTexCoord);
-    
-    vec2 shiftedRightTexCoord=vec2(tex_coord.x+STRENGTH,tex_coord.y);
-    vec4 sampledTexRight=texture(tex,shiftedRightTexCoord);
-    frag_color = vec4( sampledTexLeft.x, sampledTex.y,sampledTexRight.z, sampledTex.w);
+    vec4 sampledTex = texture(tex, tex_coord);
+
+    // shift to the left
+    vec2 shiftedLeftTexCoord = vec2(tex_coord.x - STRENGTH, tex_coord.y);
+    // Sample
+    vec4 sampledTexLeft = texture(tex, shiftedLeftTexCoord);
+
+    // shift to the right
+    vec2 shiftedRightTexCoord = vec2(tex_coord.x + STRENGTH, tex_coord.y);
+    // Sample
+    vec4 sampledTexRight = texture(tex, shiftedRightTexCoord);
+
+    frag_color = vec4(sampledTexLeft.x, sampledTex.y, sampledTexRight.z, sampledTex.w);
 }
