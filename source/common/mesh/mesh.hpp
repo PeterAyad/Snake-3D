@@ -36,18 +36,24 @@ namespace our
 
             // Create a vertex array object (VAO)
             glGenVertexArrays(1, &VAO);
+            // Bind it
             glBindVertexArray(VAO);
 
             // Create a vertex buffer
             glGenBuffers(1, &VBO);
+            // Bind it
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            // Copy the vertex data to the vertex buffer
             glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices.front(), GL_STATIC_DRAW);
 
             // Create an element buffer
             glGenBuffers(1, &EBO);
+            // Bind it
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            // Copy the element data to the element buffer
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, elements.size() * sizeof(unsigned int), &elements.front(), GL_STATIC_DRAW);
 
+            // Set the elements count
             elementCount = elements.size();
 
             // Set the vertex attribute pointers
@@ -69,8 +75,9 @@ namespace our
         void draw()
         {
             // TODO: (Req 1) Write this function
-            //  bind the VAO, draw the mesh using the element buffer
+            // bind the VAO
             glBindVertexArray(VAO);
+            // Draw the mesh using the element buffer
             glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, 0);
         }
 
@@ -78,6 +85,7 @@ namespace our
         ~Mesh()
         {
             // TODO: (Req 1) Write this function
+            // Delete the vertex array object, the vertex buffer and the element buffer
             glDeleteBuffers(1, &VBO);
             glDeleteBuffers(1, &EBO);
             glDeleteVertexArrays(1, &VAO);

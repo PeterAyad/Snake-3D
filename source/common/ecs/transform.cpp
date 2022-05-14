@@ -13,14 +13,18 @@ namespace our
     {
         // TODO: (Req 2) Write this function
 
+        // Create a Scale matrix
         glm::mat4 scaleMatrix = glm::mat4(1.0f);
         scaleMatrix = glm::scale(scaleMatrix, scale);
 
+        // Create a rotation matrix
         glm::mat4 rotateMatrix = glm::yawPitchRoll(rotation.y, rotation.x, rotation.z);
 
+        // Create a translation matrix
         glm::mat4 translateMatrix = glm::mat4(1.0f);
         translateMatrix = glm::translate(translateMatrix, position);
 
+        // Return the product of the above matrices
         return translateMatrix * rotateMatrix * scaleMatrix;
     }
 
