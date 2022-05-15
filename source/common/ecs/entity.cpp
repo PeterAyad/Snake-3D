@@ -12,7 +12,14 @@ namespace our {
     // its parent's parent's matrix and so on till you reach the root.
     glm::mat4 Entity::getLocalToWorldMatrix() const {
         //TODO: (Req 7) Write this function
-        
+        /*
+        *here I will check if:
+        *   i have a parent entity then i will return my localTransform multiplied 
+        *   with  my parent's getLocalToWorldMatrix() function returned value
+        *else:
+        *   if will only return my localTransform matrix.
+        *
+        */
         if(this->parent != nullptr)
             return (this->parent)->getLocalToWorldMatrix() * this->localTransform.toMat4();
         
