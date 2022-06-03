@@ -1,0 +1,272 @@
+{
+    "start-scene": "main",
+    "window":
+    {
+        "title":"Default Game Window",
+        "size":{
+            "width":1280,
+            "height":720
+        },
+        "fullscreen": false
+    },
+    "scene": {
+        "renderer":{
+            "sky": "assets/textures/sky.jpg",
+            "postprocess": "assets/shaders/postprocess/vignette.frag"
+        },
+        "assets":{
+            "shaders":{
+                "tinted":{
+                    "vs":"assets/shaders/tinted.vert",
+                    "fs":"assets/shaders/tinted.frag"
+                },
+                "textured":{
+                    "vs":"assets/shaders/textured.vert",
+                    "fs":"assets/shaders/textured.frag"
+                }
+            },
+            "textures":{
+                "moon": "assets/textures/moon.jpg",
+                "grass": "assets/textures/grass_ground_d.jpg",
+                "wood": "assets/textures/wood.jpg",
+                "glass": "assets/textures/glass-panels.png",
+                "monkey": "assets/textures/monkey.png",
+                "skin": "assets/textures/skin.jpg",
+                "sand": "assets/textures/sand.jpg",
+                "apple": "assets/textures/apple.jpg"
+            },
+            "meshes":{
+                "cube": "assets/models/cube.obj",
+                "monkey": "assets/models/monkey.obj",
+                "plane": "assets/models/plane.obj",
+                "sphere": "assets/models/sphere.obj",
+                "head": "assets/models/head.obj",
+                "tail": "assets/models/tail.obj",
+                "body": "assets/models/body.obj",
+                "curve": "assets/models/curve.obj",
+                "cherry":"assets/models/cherry.obj",
+                "curve":"assets/models/curve.obj"
+            },
+            "samplers":{
+                "default":{},
+                "pixelated":{
+                    "MAG_FILTER": "GL_NEAREST"
+                }
+            },
+            "materials":{
+                "metal":{
+                    "type": "tinted",
+                    "shader": "tinted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.45, 0.4, 0.5, 1]
+                },
+                "glass":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        },
+                        "blending":{
+                            "enabled": true,
+                            "sourceFactor": "GL_SRC_ALPHA",
+                            "destinationFactor": "GL_ONE_MINUS_SRC_ALPHA"
+                        },
+                        "depthMask": false
+                    },
+                    "transparent": true,
+                    "tint": [1, 1, 1, 1],
+                    "texture": "glass",
+                    "sampler": "pixelated"
+                },
+                "grass":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "grass",
+                    "sampler": "default"
+                },
+                "skin":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "skin",
+                    "sampler": "default"
+                },
+                "sand":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "sand",
+                    "sampler": "default"
+                },
+                "monkey":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "monkey",
+                    "sampler": "default"
+                },
+                "moon":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "moon",
+                    "sampler": "default"
+                },
+                "apple":{
+                    "type": "textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [1, 1, 1, 1],
+                    "texture": "apple",
+                    "sampler": "default"
+                }
+            }
+        },
+        "world":[
+            {
+                "position": [0, 15, 20],
+                "components": [
+                    {
+                        "type": "Camera"
+                    },
+                    {
+                        "type": "Free Camera Controller"
+                    }
+                ]
+            },
+            {
+                "position": [0, -10, -20],
+                "rotation": [-90, 0, 0],
+                "scale": [30, 20, 1],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "plane",
+                        "material": "sand"
+                    }
+                ]
+            },
+            {
+                "position": [0, -10, -12],
+                "rotation": [0, 90, 0],
+                "scale": [2, 2, 2],
+                "name":"snake_head",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "head",
+                        "material": "skin"
+                    },
+                    {
+                        "type": "Movement",
+                        "linearVelocity": [0, 0, -1]
+                    }
+                ]
+            },
+            {
+                "position": [0, -10, -10],
+                "rotation": [0, 90, 0],
+                "scale": [2, 2, 2],
+                "name":"snake_body0",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "body",
+                        "material": "skin"
+                    },
+                    {
+                        "type": "Movement",
+                        "linearVelocity": [0, 0, -1]
+                    }
+                ]
+            },{
+                "position": [0, -10, -8],
+                "rotation": [0, 90, 0],
+                "scale": [2, 2, 2],
+                "name":"snake_tail",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "tail",
+                        "material": "skin"
+                    },
+                    {
+                        "type": "Movement",
+                        "linearVelocity": [0, 0, -1]
+                    }
+                ]
+            },{
+                "position": [10, -11, -10],
+                "rotation": [270, 0, 0],
+                "scale": [0.5, 0.5, 0.5],
+                "name":"apple",
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "cherry",
+                        "material": "apple"
+                    }
+                ]
+            }
+        ]
+    }
+}
