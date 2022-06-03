@@ -64,4 +64,90 @@ namespace our {
         sampler = AssetLoader<Sampler>::get(data.value("sampler", ""));
     }
 
+    void LightedMaterial::setup() const
+    {
+        // TODO: (Req 6) Write this function
+        Material::setup();
+
+        glActiveTexture(GL_TEXTURE0);
+        if (albedoTexture)
+            albedoTexture->bind();
+        albedoSampler->bind(0);
+        shader->set("material.albedo", 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        if (specularTexture)
+            specularTexture->bind();
+        specularSampler->bind(1);
+        shader->set("material.specular", 1);
+
+        glActiveTexture(GL_TEXTURE2);
+        if (roughnessTexture)
+            roughnessTexture->bind();
+        roughnessSampler->bind(2);
+        shader->set("material.roughness", 2);
+
+        glActiveTexture(GL_TEXTURE3);
+        if (ambientOcclusionTexture)
+        {
+            ambientOcclusionTexture->bind();
+            shader->set("material.ambientOcclusionEnable", true);
+        }else
+            shader->set("material.ambientOcclusionEnable", false);
+        ambientOcclusionSampler->bind(3);
+        shader->set("material.ambient_occlusion", 3);
+
+        glActiveTexture(GL_TEXTURE4);
+        if (emissiveTexture)
+            emissiveTexture->bind();
+        emissiveSampler->bind(4);
+        shader->set("material.emissive", 4);
+
+        glActiveTexture(GL_TEXTURE5);
+        if (alphaTexture)
+        {
+            alphaTexture->bind();
+            shader->set("material.alphaTextureEnable", true);
+        }
+        else
+            shader->set("material.alphaTextureEnable", false);
+        alphaSampler->bind(5);
+        shader->set("material.alpha", 5);
+
+        glActiveTexture(GL_TEXTURE0);
+    }
+
+    // This function read the material data from a json object
+    void LightedMaterial::deserialize(const nlohmann::json &data)
+    {
+        Material::deserialize(data);
+        // LightedMaterial::deserialize(data);
+        if (!data.is_object())
+            return;
+        if(data.contains("albedo_texture"))
+            albedoTexture = AssetLoader<Texture2D>::get(data.value("albedo_texture", ""));
+        albedoSampler = AssetLoader<Sampler>::get(data.value("albedo_sampler", "default"));
+
+        if (data.contains("specular_texture"))
+            specularTexture = AssetLoader<Texture2D>::get(data.value("specular_texture", ""));
+        specularSampler = AssetLoader<Sampler>::get(data.value("specular_sampler", "default"));
+
+        if (data.contains("roughness_texture"))
+            roughnessTexture = AssetLoader<Texture2D>::get(data.value("roughness_texture", ""));
+        roughnessSampler = AssetLoader<Sampler>::get(data.value("roughness_sampler", "default"));
+
+        if (data.contains("ambientOcclusion_texture"))
+            ambientOcclusionTexture = AssetLoader<Texture2D>::get(data.value("ambientOcclusion_texture", ""));
+        ambientOcclusionSampler = AssetLoader<Sampler>::get(data.value("ambientOcclusion_sampler", "default"));
+
+        if (data.contains("emissive_texture"))
+            emissiveTexture = AssetLoader<Texture2D>::get(data.value("emissive_texture", ""));
+        emissiveSampler = AssetLoader<Sampler>::get(data.value("emissive_sampler", "default"));
+
+        if (data.contains("alpha_texture"))
+            alphaTexture = AssetLoader<Texture2D>::get(data.value("alpha_texture", ""));
+        alphaSampler = AssetLoader<Sampler>::get(data.value("alpha_sampler", "default"));
+        
+    }
+
 }
