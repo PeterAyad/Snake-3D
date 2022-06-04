@@ -23,7 +23,7 @@ namespace our
     glm::vec3 diffuse = {0.0f, 0.0f, 0.0f};
 
 
-    static std::string getID() { return "Light"; }
+    static std::string getID() { return "Light Component"; }
 
     
     void deserialize(const nlohmann::json &data) override;
