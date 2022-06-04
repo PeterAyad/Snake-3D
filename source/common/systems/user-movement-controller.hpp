@@ -23,6 +23,7 @@ namespace our
     const int DOWN = 1;
     const int LEFT = 2;
     const int RIGHT = 3;
+    int speed = 8;
 
     std::map<int, int> cornersToBeRemoved;
     std::map<std::string, float> cornerRotations;
@@ -94,7 +95,7 @@ namespace our
             /* Getting number of milliseconds as an integer. */
             int ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count();
 
-            if (ms_int > 400)
+            if (ms_int > (1000-speed*100))
             {
                 updateDirection = true;
                 int newDirection = lastDirection;

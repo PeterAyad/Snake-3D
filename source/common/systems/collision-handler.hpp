@@ -8,11 +8,13 @@
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <iostream>
+#include <random>
 
 namespace our
 {
     class CollisionHandler
     {
+        int score = 0;
         State *state;
         Application *app;
 
@@ -49,8 +51,57 @@ namespace our
 
             if (checkCollision(snakeBoundaries, appleBoundaries))
             {
+                checkApplePosition(apple);
                 addSnakePart(snake);
+                updateScore(world);
             }
+        }
+
+        void updateScore(World *world)
+        {
+            score++;
+            Entity *number1 = nullptr;
+            Entity *number2 = nullptr;
+            // Entity *camera = nullptr;
+            // for (Entity *entity : world->getEntities())
+            // {
+            //     if (entity->getComponent<CameraComponent>())
+            //         camera = entity;
+            //     if (camera)
+            //         break;
+            // }
+            for (Entity *entity : world->getEntities())
+            {
+                if (entity->name == "number1")
+                    number1 = entity;
+                if (entity->name == "number2")
+                    number2 = entity;
+                if (number1 && number2)
+                    break;
+            }
+
+            number1->getComponent<MeshRendererComponent>()->setMesh("num" + std::to_string(score / 10));
+            number2->getComponent<MeshRendererComponent>()->setMesh("num" + std::to_string(score % 10));
+        }
+
+        void checkApplePosition(Entity *apple)
+        {
+            srand(static_cast<unsigned>(time(0)));
+            float x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
+            while (x < -30.0f || x > 30.0f)
+            {
+                std::cout << "x: " << x << std::endl;
+                x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
+            }
+            float y = -11.0f;
+            float z = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
+            while (z < -30.0f || z > -5.0f)
+            {
+                std::cout << "z: " << z << std::endl;
+                z = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
+            }
+
+            apple->localTransform.position = glm::vec3(x, y, z);
         }
 
         void addSnakePart(Entity *snakeHead)

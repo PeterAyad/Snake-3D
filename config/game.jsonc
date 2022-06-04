@@ -46,7 +46,16 @@
                 "curve": "assets/models/curve.obj",
                 "cherry":"assets/models/cherry.obj",
                 "score":"assets/models/score.obj",
-                "num0":"assets/models/numbers/num0.obj"
+                "num0":"assets/models/numbers/num0.obj",
+                "num1":"assets/models/numbers/num1.obj",
+                "num2":"assets/models/numbers/num2.obj",
+                "num3":"assets/models/numbers/num3.obj",
+                "num4":"assets/models/numbers/num4.obj",
+                "num5":"assets/models/numbers/num5.obj",
+                "num6":"assets/models/numbers/num6.obj",
+                "num7":"assets/models/numbers/num7.obj",
+                "num8":"assets/models/numbers/num8.obj",
+                "num9":"assets/models/numbers/num9.obj"
             },
             "samplers":{
                 "default":{},
@@ -209,6 +218,7 @@
                         "position": [1.15, -0.3, -1],
                         "rotation": [-10, -50, 13],
                         "scale": [0.002, 0.00175, 0.002],
+                        "name": "number1",
                         "components": [
                             {
                                 "type": "Mesh Renderer",
@@ -220,6 +230,7 @@
                         "position": [1.23, -0.3, -1],
                         "rotation": [-10, -50, 13],
                         "scale": [0.002, 0.00175, 0.002],
+                        "name":"number2",
                         "components": [
                             {
                                 "type": "Mesh Renderer",
