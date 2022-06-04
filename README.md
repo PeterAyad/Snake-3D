@@ -86,11 +86,3 @@ In config file, scene has:
 2. World which has entities, each entity is composed of some assets (which are called components here) and one of these entities has type camera
 
 Also in config file we describe thw window, start-scene
-
-## Todo
-
-*Light is a component like camera*
-*It holds color, type, and angles* see how to describe light completely on learnopengl.com
-*take the shader of the last section add it to shaders*
-*Create a lit material class that carries light maps* on learnopengl.com
-*Add it to forward renderer* `if (config.contains("lighting"))` then create lights 
