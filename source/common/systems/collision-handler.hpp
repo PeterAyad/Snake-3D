@@ -14,11 +14,13 @@ namespace our
     class CollisionHandler
     {
         State *state;
+        Application *app;
 
     public:
-        void enter(State *state)
+        void enter(State *state, Application *app)
         {
             this->state = state;
+            this->app = app;
         }
 
         void update(World *world, float deltaTime)
@@ -42,13 +44,11 @@ namespace our
             if (snake == nullptr || apple == nullptr)
                 return;
 
-            std::vector<glm::vec3> snakeBoundaries = snake->getBoundariesInWorldSpace();
-            std::vector<glm::vec3> appleBoundaries = apple->getBoundariesInWorldSpace();
+            std::vector<glm::vec3> snakeBoundaries = snake->getBoundariesInWorldSpace(app->getWindowSize());
+            std::vector<glm::vec3> appleBoundaries = apple->getBoundariesInWorldSpace(app->getWindowSize());
 
-            
             if (checkCollision(snakeBoundaries, appleBoundaries))
             {
-                std::cout << "Snake ate an apple" << std::endl;
                 addSnakePart(snake);
             }
         }
@@ -78,6 +78,12 @@ namespace our
                 snakeHead->localTransform.position += glm::vec3(2.0f, 0.0f, 0.0f);
         }
 
+        void checkMinMax(float &min, float &max)
+        {
+            if (min > max)
+                std::swap(min, max);
+        }
+
         bool checkCollision(std::vector<glm::vec3> object1Boundaries, std::vector<glm::vec3> object2Boundaries)
         {
             float min_x1 = object1Boundaries[0].x;
@@ -94,12 +100,12 @@ namespace our
             float max_y2 = object2Boundaries[4].y;
             float max_z2 = object2Boundaries[5].z;
 
-            // if (
-            //     ((min_x1 <= min_x2 && min_x2 <= max_x1) || (min_x2 <= min_x1 && min_x1 <= max_x2)) &&
-            //     ((min_y1 <= min_y2 && min_y2 <= max_y1) || (min_y2 <= min_y1 && min_y1 <= max_y2)) &&
-            //     ((min_z1 <= min_z2 && min_z2 <= max_z1) || (min_z2 <= min_z1 && min_z1 <= max_z2)))
-            //     return true;
-            // return false;
+            checkMinMax(min_x1, max_x1);
+            checkMinMax(min_y1, max_y1);
+            checkMinMax(min_z1, max_z1);
+            checkMinMax(min_x2, max_x2);
+            checkMinMax(min_y2, max_y2);
+            checkMinMax(min_z2, max_z2);
 
             if (min_x1 > max_x2)
                 return false;

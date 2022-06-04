@@ -1,6 +1,7 @@
 #include "entity.hpp"
 #include "../deserialize-utils.hpp"
 #include "../components/component-deserializer.hpp"
+#include "world.hpp"
 
 #include <glm/gtx/euler_angles.hpp>
 
@@ -47,12 +48,20 @@ namespace our
         }
     }
 
-    std::vector<glm::vec3> Entity::getBoundariesInWorldSpace()
+    std::vector<glm::vec3> Entity::getBoundariesInWorldSpace(glm::ivec2 windowSize)
     {
+        CameraComponent *camera = nullptr;
+        for (auto entity : world->getEntities())
+        {
+            // If we hadn't found a camera yet, we look for a camera in this entity
+            if (!camera)
+                camera = entity->getComponent<CameraComponent>();
+        }
+        glm::mat4 VP = camera->getProjectionMatrix(windowSize) * camera->getViewMatrix();
         std::vector<glm::vec3> boundaries = getComponent<MeshRendererComponent>()->mesh->boundaries;
         for (int i = 0; i < boundaries.size(); i++)
         {
-            boundaries[i] = glm::vec3(getLocalToWorldMatrix() * glm::vec4(boundaries[i], 1.0f));
+            boundaries[i] = glm::vec3(VP * getLocalToWorldMatrix() * glm::vec4(boundaries[i], 1.0f));
         }
         return boundaries;
     }

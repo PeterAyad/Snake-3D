@@ -94,7 +94,7 @@ namespace our
             /* Getting number of milliseconds as an integer. */
             int ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count();
 
-            if (ms_int > 200)
+            if (ms_int > 400)
             {
                 updateDirection = true;
                 int newDirection = lastDirection;

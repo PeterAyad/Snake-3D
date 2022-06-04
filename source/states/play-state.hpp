@@ -37,7 +37,7 @@ class Playstate : public our::State
         // We initialize the camera controller system since it needs a pointer to the app
         cameraController.enter(getApp());
         userMovementController.enter(getApp(),this);
-        collisionHandler.enter(this);
+        collisionHandler.enter(this,getApp());
         // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
