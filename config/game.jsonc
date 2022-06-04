@@ -11,7 +11,7 @@
     },
     "scene": {
         "renderer":{
-            "sky": "assets/textures/sky.jpg",
+            "sky": "assets/textures/sky2.jpg",
             "postprocess": "assets/shaders/postprocess/vignette.frag"
         },
         "assets":{
@@ -45,7 +45,8 @@
                 "body": "assets/models/body.obj",
                 "curve": "assets/models/curve.obj",
                 "cherry":"assets/models/cherry.obj",
-                "curve":"assets/models/curve.obj"
+                "score":"assets/models/score.obj",
+                "num0":"assets/models/numbers/num0.obj"
             },
             "samplers":{
                 "default":{},
@@ -183,13 +184,49 @@
         },
         "world":[
             {
-                "position": [0, 15, 20],
+                "position": [0, 15, 0],
                 "components": [
                     {
                         "type": "Camera"
                     },
                     {
                         "type": "Free Camera Controller"
+                    }
+                ],
+                "children": [
+                    {
+                        "position": [0.9, -0.3, -1],
+                        "rotation": [-10, -50, 13],
+                        "scale": [0.002, 0.002, 0.002],
+                        "components": [
+                            {
+                                "type": "Mesh Renderer",
+                                "mesh": "score",
+                                "material": "metal"
+                            }
+                        ]
+                    },{
+                        "position": [1.15, -0.3, -1],
+                        "rotation": [-10, -50, 13],
+                        "scale": [0.002, 0.00175, 0.002],
+                        "components": [
+                            {
+                                "type": "Mesh Renderer",
+                                "mesh": "num0",
+                                "material": "metal"
+                            }
+                        ]
+                    },{
+                        "position": [1.23, -0.3, -1],
+                        "rotation": [-10, -50, 13],
+                        "scale": [0.002, 0.00175, 0.002],
+                        "components": [
+                            {
+                                "type": "Mesh Renderer",
+                                "mesh": "num0",
+                                "material": "metal"
+                            }
+                        ]
                     }
                 ]
             },
