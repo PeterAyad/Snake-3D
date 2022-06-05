@@ -18,6 +18,7 @@ class Playstate : public our::State
     our::FreeCameraControllerSystem cameraController;
     our::UserMovementController userMovementController;
     our::CollisionHandler collisionHandler;
+    bool gameOver = false;
 
     void onInitialize() override
     {
@@ -35,9 +36,11 @@ class Playstate : public our::State
         }
         // We initialize the camera controller system since it needs a pointer to the app
         cameraController.enter(getApp());
-        collisionHandler.enter(this, getApp());
-        userMovementController.enter(getApp(), this);
-        // Then we initialize the renderer
+        // We initialize the collision handler system since it needs a pointer to the app, the state and a pointer to the game over flag
+        collisionHandler.enter(this, getApp(), gameOver);
+        // We initialize the user movement controller system since it needs a pointer to the app, the state and a pointer to the game over flag
+        userMovementController.enter(this, getApp(), gameOver);
+        // Then we initialize the renderer and set the sky element
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
         renderer.deserialize(config["worldSky"]);
@@ -50,7 +53,7 @@ class Playstate : public our::State
         collisionHandler.update(&world, deltaTime);
         cameraController.update(&world, (float)deltaTime);
         // And finally we use the renderer system to draw the scene
-        renderer.render(&world, false);
+        renderer.render(&world, gameOver);
     }
 
     void onDestroy() override
