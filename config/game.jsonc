@@ -132,15 +132,11 @@
                     "tint": [1, 1, 1, 1],
                     "texture": "skin",
                     "sampler": "default",
-                    "albedo_texture" : "skin",
-                    "specular_texture": "skin",
-                    "roughness_texture": "skin",
-                    "ambientOcclusion_texture": "skin",
-                    "alpha_texture":"alpha"
+                    "emissive_texture": "skin"
                 },
                 "sand":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lighted",
+                    "shader": "lighted",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -150,7 +146,7 @@
                         }
                     },
                     "tint": [1, 1, 1, 1],
-                    "texture": "sand",
+                    "emissive_texture": "sand",
                     "sampler": "default"
                 },
                 "monkey":{
