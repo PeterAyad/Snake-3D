@@ -17,12 +17,14 @@ namespace our
         int score = 0;
         State *state;
         Application *app;
+        bool *game_over;
 
     public:
-        void enter(State *state, Application *app)
+        void enter(State *state, Application *app, bool &gameOver)
         {
             this->state = state;
             this->app = app;
+            this->game_over = &gameOver;
         }
 
         void update(World *world, float deltaTime)
@@ -54,6 +56,55 @@ namespace our
                 checkApplePosition(apple);
                 addSnakePart(snake);
                 updateScore(world);
+                return;
+            }
+
+            std::vector<Entity *> snakeParts;
+            Entity *head = nullptr;
+            Entity *tail = nullptr;
+
+            for (auto entity : world->getEntities())
+            {
+                if (entity->name == "snake_head")
+                {
+                    head = entity;
+                }
+                else if (entity->name == "snake_tail")
+                {
+                    tail = entity;
+                }
+                else if (entity->name.rfind("snake_part", 0) == 0)
+                {
+                    snakeParts.push_back(entity);
+                }
+            }
+            std::sort(snakeParts.begin(), snakeParts.end(), [](const Entity *a, const Entity *b)
+                      { 
+                          // Assume that function asks for greater than
+                          std::string strA= a->name.substr(10);
+                          std::string strB= b->name.substr(10);
+                          if(strB.empty())
+                          {
+                              return true;
+                          }
+                          if(strA.empty())
+                          {
+                              return false;
+                          }
+                          else{
+                              return ((std::stoi(strA))>(std::stoi(strB)));
+                          } });
+            snakeParts.push_back(tail);
+
+            std::vector<glm::vec3> headBoundaries = head->getBoundariesInWorldSpace(app->getWindowSize());
+
+            for (int i = 2; i < snakeParts.size(); i++)
+            {
+                std::vector<glm::vec3> snakePartBoundaries = snakeParts[i]->getBoundariesInWorldSpace(app->getWindowSize());
+                if (checkCollision(headBoundaries, snakePartBoundaries))
+                {
+                    *game_over = true;
+                }
             }
         }
 
@@ -90,14 +141,14 @@ namespace our
             float x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
             while (x < -30.0f || x > 30.0f)
             {
-                std::cout << "x: " << x << std::endl;
+                // std::cout << "x: " << x << std::endl;
                 x = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
             }
             float y = -11.0f;
             float z = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
             while (z < -30.0f || z > -5.0f)
             {
-                std::cout << "z: " << z << std::endl;
+                // std::cout << "z: " << z << std::endl;
                 z = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * -100;
             }
 
@@ -106,9 +157,9 @@ namespace our
 
         void addSnakePart(Entity *snakeHead)
         {
-            std::cout << "Snake ate an apple" << std::endl;
+            // std::cout << "Snake ate an apple" << std::endl;
             our::Entity *newpart = snakeHead->getWorld()->add();
-            newpart->name = "snake_part"+std::to_string(score);
+            newpart->name = "snake_part" + std::to_string(score);
             newpart->localTransform = snakeHead->localTransform;
 
             newpart->addComponent<MeshRendererComponent>();

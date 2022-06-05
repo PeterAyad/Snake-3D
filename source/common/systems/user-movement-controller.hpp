@@ -23,10 +23,11 @@ namespace our
     const int DOWN = 1;
     const int LEFT = 2;
     const int RIGHT = 3;
-    int speed = 8;
+    int speed = 9;
 
     std::map<std::string, float> cornerRotations;
     std::vector<std::pair<glm::vec3, std::string>> cornerPositions;
+    std::vector<int> cornersAge;
 
     class UserMovementController
     {
@@ -35,15 +36,18 @@ namespace our
         std::chrono::_V2::system_clock::time_point lastTime;
         int lastDirection;
         State *state;
+        bool *game_over;
 
     public:
         void enter(Application *app,
-                   State *state)
+                   State *state, bool &gameOver)
         {
             this->app = app;
             lastTime = std::chrono::high_resolution_clock::now();
             this->state = state;
             lastDirection = UP;
+
+            this->game_over = &gameOver;
 
             cornerRotations["upright"] = 0.0f;
             cornerRotations["downright"] = 90.0f;
@@ -132,18 +136,18 @@ namespace our
             // orderedSnakeParts.push_back(snakeParts[snakeParts.size() - 1]);
             // // std:: cout << "ordered parts size: " << orderedSnakeParts.size() << std::endl;
 
-            for (auto entity : snakeParts)
-            {
-                std::cout << entity->name << std::endl;
-            }
-            std::cout << "==============" << std::endl;
+            // for (auto entity : snakeParts)
+            // {
+            //     std::cout << entity->name << std::endl;
+            // }
+            // std::cout << "==============" << std::endl;
 
             auto now = std::chrono::high_resolution_clock::now();
 
             /* Getting number of milliseconds as an integer. */
             int ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count();
 
-            if (ms_int > (1000 - speed * 100))
+            if (ms_int > (1000 - speed * 100) && !(*game_over))
             {
                 updateDirection = true;
                 int newDirection = lastDirection;
@@ -172,7 +176,24 @@ namespace our
                 }
 
                 updateMesh(snakeParts);
+                removeOldCorners(snakeParts);
                 lastTime = now;
+            }
+        }
+
+        void removeOldCorners(std::vector<Entity *> snakeParts)
+        {
+            for (int i = 0; i < cornersAge.size(); i++)
+            {
+                cornersAge[i]++;
+            }
+            for (int i = cornersAge.size() - 1; i >= 0; i--)
+            {
+                if (cornersAge[i] > snakeParts.size() * 2)
+                {
+                    cornerPositions.erase(cornerPositions.begin() + i);
+                    cornersAge.erase(cornersAge.begin() + i);
+                }
             }
         }
 
@@ -198,14 +219,14 @@ namespace our
                 else if (newDirection == LEFT)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(-1.0f, 0.0f, 0.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "upleft");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(-2.0f, 0.0f, 0.0f);
                 }
                 else if (newDirection == RIGHT)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(1.0f, 0.0f, 0.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "upright");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(2.0f, 0.0f, 0.0f);
                     snakeParts[0]->localTransform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -221,14 +242,14 @@ namespace our
                 else if (newDirection == LEFT)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(-1.0f, 0.0f, 0.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "downleft");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(-2.0f, 0.0f, 0.0f);
                 }
                 else if (newDirection == RIGHT)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(1.0f, 0.0f, 0.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "downright");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(2.0f, 0.0f, 0.0f);
                 }
@@ -243,14 +264,14 @@ namespace our
                 else if (newDirection == UP)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(0.0f, 0.0f, -1.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "downleft");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(0.0f, 0.0f, -2.0f);
                 }
                 else if (newDirection == DOWN)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(0.0f, 0.0f, 1.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "upleft");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(0.0f, 0.0f, 2.0f);
                 }
@@ -265,14 +286,14 @@ namespace our
                 else if (newDirection == UP)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(0.0f, 0.0f, -1.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "downright");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(0.0f, 0.0f, -2.0f);
                 }
                 else if (newDirection == DOWN)
                 {
                     snakeParts[0]->getComponent<MovementComponent>()->linearVelocity = glm::vec3(0.0f, 0.0f, 1.0f);
-                    std::cout << "Corner Added" << std::endl;
+                    // std::cout << "Corner Added" << std::endl;
                     addCorner(snakeParts[0]->localTransform.position, "upright");
                     snakeParts[0]->localTransform.position = snakeParts[0]->localTransform.position + glm::vec3(0.0f, 0.0f, 2.0f);
                 }
@@ -282,15 +303,16 @@ namespace our
 
         void addCorner(glm::vec3 position, std::string type)
         {
-            for (std::pair<glm::vec3, std::string> i : cornerPositions)
-            {
-                if (i.first.x == position.x && i.first.y == position.y && i.first.z == position.z)
-                {
-                    i.second = type;
-                    return;
-                }
-            }
+            // for (std::pair<glm::vec3, std::string> i : cornerPositions)
+            // {
+            //     if (i.first.x == position.x && i.first.y == position.y && i.first.z == position.z)
+            //     {
+            //         i.second = type;
+            //         return;
+            //     }
+            // }
             cornerPositions.push_back(std::make_pair(position, type));
+            cornersAge.push_back(0);
         }
 
         void updateMesh(std::vector<Entity *> snakeParts)
