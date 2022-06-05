@@ -162,9 +162,9 @@ namespace our
             float y = -10.0f;
             float z = position.z;
             if (z > -2.0f)
-                z = -36.0f;
+                z = -35.0f;
             else if(z<-35.0f)
-                z = -1.0f;
+                z = -2.0f;
             else
                 z = z;
             return glm::vec3(x, y, z);
