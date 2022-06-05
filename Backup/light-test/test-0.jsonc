@@ -1,0 +1,81 @@
+{
+    "start-scene": "light-test",
+    "window":
+    {
+        "title":"light Test Window",
+        "size":{
+            "width":800,
+            "height":600
+        },
+        "fullscreen": false
+    },
+    "screenshots":{
+        "directory": "screenshots/light-test",
+        "requests": [
+            { "file": "test-0.png", "frame":  1 }
+        ]
+    },
+    "scene": {
+        "assets":{
+            "shaders":{
+                "lighted":{
+                    "vs":"assets/shaders/light.vert",
+                    "fs":"assets/shaders/light.frag"
+                }
+            },
+            "textures":{
+                "monkey": "assets/textures/monkey.png",
+                "albedo": "assets/textures/images/albedo.jpg",
+                "specular": "assets/textures/images/specular.jpg",
+                "roughness": "assets/textures/images/roughness.jpg",
+                "ambientOcclusion": "assets/textures/images/ambient_occlusion.jpg",
+                "emissive": "assets/textures/images/emissive.jpg"
+
+            },
+            "meshes":{
+                "mesh": "assets/models/Suzanne.obj"
+            },
+            "samplers":{
+                "default":{}
+            },
+            "materials":{
+                "material":{
+                    "type": "lighted",
+                    "shader": "lighted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.8, 0.6, 0.5, 1],
+                    "texture": "monkey",
+                    "sampler": "default",
+                    "albedo_texture" : "albedo",
+                    "specular_texture": "specular",
+                    "roughness_texture": "roughness",
+                    "ambientOcclusion_texture": "ambientOcclusion",
+                    "emissive_texture": "emissive",
+                    "alpha_texture":"alpha"
+
+                }
+            }
+        },
+        "objects": [
+            {
+                "position": [0, 0, 0],
+                "rotation": [0, 0, 0]
+            }
+        ],
+        "camera": {
+            "eye": [0,0,2],
+            "center": [0, 0, 0],
+            "up": [0, 1, 0],
+            "fov": 90,
+            "near": 0.01,
+            "far": 1000
+        }
+    }
+}
