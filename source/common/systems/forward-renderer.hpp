@@ -42,9 +42,11 @@ namespace our
         GLuint postprocessFrameBuffer, postProcessVertexArray;
         Texture2D *colorTarget, *depthTarget;
         TexturedMaterial *postprocessMaterial;
+
         glm::vec3 sky_top;
         glm::vec3 sky_middle;
         glm::vec3 sky_bottom;
+
 
     public:
         // Initialize the renderer including the sky and the Postprocessing objects.
@@ -53,6 +55,9 @@ namespace our
         // Clean up the renderer
         void destroy();
         // This function should be called every frame to draw the given world
+
+//         void render(World *world, bool enablePostProcessing = true);
+
         void render(World *world);
 
         std::vector<Entity *> lightedEntities(World *world);
@@ -76,6 +81,7 @@ namespace our
                 sky_bottom = glm::vec3(v[0], v[1], v[2]);
             }
         }
+
     };
 
 }

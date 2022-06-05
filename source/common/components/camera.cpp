@@ -37,7 +37,7 @@ namespace our {
         // then you can use glm::lookAt
 
         glm::vec4 eye = M * glm::vec4(0,0,0,1) ;
-        glm::vec4 center = M * glm::vec4(0,0,-1,1) ;
+        glm::vec4 center = M * glm::vec4(0,-10,-7,1) ;
         glm::vec4 up = M * glm::vec4(0,1,0,1)  ;
         glm::mat4 V= glm::lookAt(
             glm::vec3(eye[0],eye[1],eye[2]),   //camera position

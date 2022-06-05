@@ -52,7 +52,7 @@ namespace our {
         //bind the  sampler to a texture unit 
         sampler->bind(0);
         //send the unit number to the uniform variable "tex"
-        shader->set("tex",0);  
+        shader->set("tex",0); 
     }
 
     // This function read the material data from a json object

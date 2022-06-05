@@ -26,6 +26,8 @@ namespace our {
 
         World* getWorld() const { return world; } // Returns the world to which this entity belongs
 
+        std::vector<glm::vec3> getBoundariesInWorldSpace(glm::ivec2);
+
         glm::mat4 getLocalToWorldMatrix() const; // Computes and returns the transformation from the entities local space to the world space
         void deserialize(const nlohmann::json&); // Deserializes the entity data and components from a json object
         

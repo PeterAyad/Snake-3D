@@ -21,6 +21,7 @@ namespace our
         GLsizei elementCount;
 
     public:
+        std::vector<glm::vec3> boundaries;
         // The constructor takes two vectors:
         // - vertices which contain the vertex data.
         // - elements which contain the indices of the vertices out of which each rectangle will be constructed.
@@ -30,6 +31,8 @@ namespace our
         // a vertex array object to define how to read the vertex & element buffer during rendering
         Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &elements)
         {
+
+            setBoundaries(vertices);
             // TODO: (Req 1) Write this function
             //  remember to store the number of elements in "elementCount" since you will need it for drawing
             //  For the attribute locations, use the constants defined above: ATTRIB_LOC_POSITION, ATTRIB_LOC_COLOR, etc
@@ -69,6 +72,37 @@ namespace our
             // Vertex Normals
             glVertexAttribPointer(ATTRIB_LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(sizeof(Color) + sizeof(glm::vec3) + sizeof(glm::vec2)));
             glEnableVertexAttribArray(ATTRIB_LOC_NORMAL);
+        }
+
+        void setBoundaries(const std::vector<Vertex> &vertices)
+        {
+            glm::vec3 pointOfLowestX = vertices[0].position;
+            glm::vec3 pointOfLowestY = vertices[0].position;
+            glm::vec3 pointOfLowestZ = vertices[0].position;
+            glm::vec3 pointOfHighestX = vertices[0].position;
+            glm::vec3 pointOfHighestY = vertices[0].position;
+            glm::vec3 pointOfHighestZ = vertices[0].position;
+            for (auto vertex : vertices)
+            {
+                if (vertex.position.x < pointOfLowestX.x)
+                    pointOfLowestX = vertex.position;
+                if (vertex.position.y < pointOfLowestY.y)
+                    pointOfLowestY = vertex.position;
+                if (vertex.position.z < pointOfLowestZ.z)
+                    pointOfLowestZ = vertex.position;
+                if (vertex.position.x > pointOfHighestX.x)
+                    pointOfHighestX = vertex.position;
+                if (vertex.position.y > pointOfHighestY.y)
+                    pointOfHighestY = vertex.position;
+                if (vertex.position.z > pointOfHighestZ.z)
+                    pointOfHighestZ = vertex.position;
+            }
+            boundaries.push_back(pointOfLowestX);
+            boundaries.push_back(pointOfLowestY);
+            boundaries.push_back(pointOfLowestZ);
+            boundaries.push_back(pointOfHighestX);
+            boundaries.push_back(pointOfHighestY);
+            boundaries.push_back(pointOfHighestZ);
         }
 
         // this function should render the mesh
