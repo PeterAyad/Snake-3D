@@ -132,7 +132,12 @@
                     "tint": [1, 1, 1, 1],
                     "texture": "skin",
                     "sampler": "default",
-                    "emissive_texture": "skin"
+                    "albedo_texture" : "skin",
+                    "specular_texture": "skin",
+                    "roughness_texture": "skin",
+                    "ambientOcclusion_texture": "skin",
+                    "emissive_texture": "default",
+                    "alpha_texture":"alpha"
                 },
                 "sand":{
                     "type": "lighted",
@@ -146,8 +151,13 @@
                         }
                     },
                     "tint": [1, 1, 1, 1],
-                    "emissive_texture": "sand",
-                    "sampler": "default"
+                    "sampler": "default",
+                    "albedo_texture" : "sand",
+                    "specular_texture": "sand",
+                    "roughness_texture": "sand",
+                    "ambientOcclusion_texture": "sand",
+                    "emissive_texture": "default",
+                    "alpha_texture":"alpha"
                 },
                 "monkey":{
                     "type": "textured",
@@ -180,8 +190,8 @@
                     "sampler": "default"
                 },
                 "apple":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lighted",
+                    "shader": "lighted",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -191,8 +201,13 @@
                         }
                     },
                     "tint": [1, 1, 1, 1],
-                    "texture": "apple",
-                    "sampler": "default"
+                    "sampler": "default",
+                    "albedo_texture" : "apple",
+                    "specular_texture": "apple",
+                    "roughness_texture": "apple",
+                    "ambientOcclusion_texture": "apple",
+                    "emissive_texture": "default",
+                    "alpha_texture":"alpha"
                 }
             }
         },
@@ -326,14 +341,14 @@
                 ]
             },
             {
-                "position": [1, 0, 0],
+                "position": [0, 10, -30],
                 "rotation": [0, 0, 0],
                 "components": [
                     {
                         "type": "Light Component",
-                        "lightType": "point",
-                        "diffuse": [1,0.2,0.1],
-                        "specular":[1,0.2,0.1],
+                        "lightType": "directional",
+                        "diffuse": [0.4,0.3,0.3],
+                        "specular":[0.4,0.3,0.3],
                         "attenuation": [1,0,0]
 
                     }
