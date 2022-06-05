@@ -1,10 +1,14 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+
 #include <GLFW/glfw3.h>
+#include <glm/gtx/euler_angles.hpp>
 
 namespace our
 {
+
+
 
     void ForwardRenderer::initialize(glm::ivec2 windowSize, const nlohmann::json &config)
     {
@@ -55,6 +59,7 @@ namespace our
             this->skyMaterial->transparent = false;
         }
 
+        
         // Then we check if there is a postprocessing shader in the configuration
         if (config.contains("postprocess"))
         {
@@ -102,6 +107,59 @@ namespace our
             // The default options are fine but we don't need to interact with the depth buffer
             // so it is more performant to disable the depth mask
             postprocessMaterial->pipelineState.depthMask = false;
+        }
+    }
+
+    std::vector<Entity *> ForwardRenderer::lightedEntities(World *world)
+    {
+        std::vector<Entity *> lEntities;
+        for (auto entity : world->getEntities())
+        {
+            if (auto lEntity = entity->getComponent<LightComponent>(); lEntity)
+            {
+                lEntities.push_back(entity);
+            }
+        }
+
+        return lEntities;
+    }
+
+    void ForwardRenderer::lightSetup(std::vector<Entity *> entities, ShaderProgram *program)
+    {
+        program->set("light_count", (int)entities.size());
+        for (int i = 0; i < (int)entities.size(); i++)
+        {
+            LightComponent *light = entities[i]->getComponent<LightComponent>();
+            program->set("lights[" + std::to_string(i) + "].type", (int)light->lightType);
+            program->set("lights[" + std::to_string(i) + "].diffuse", light->diffuse);
+            program->set("lights[" + std::to_string(i) + "].specular", light->specular);
+            program->set("lights[" + std::to_string(i) + "].attenuation", light->attenuation);
+            program->set("lights[" + std::to_string(i) + "].cone_angles", glm::vec2(glm::radians(light->cone_angles.x), glm::radians(light->cone_angles.y)));
+            program->set("lights[" + std::to_string(i) + "].position", entities[i]->localTransform.position);
+            glm::vec3 rotation = entities[i]->localTransform.rotation;
+            program->set("lights[" + std::to_string(i) + "].direction", (glm::vec3)((glm::yawPitchRoll(rotation[1], rotation[0], rotation[2]) * (glm::vec4(0, -1, 0, 0)))));
+        }
+    }
+
+    void ForwardRenderer::excuteCommand(std::vector<RenderCommand> commands, glm::mat4 VP, std::vector<Entity *> lEntities, glm::vec3 eye)
+    {
+        for (RenderCommand command : commands)
+        {
+            ShaderProgram *program = command.material->shader;
+            Mesh *mesh = command.mesh;
+            command.material->setup();
+
+            program->set("eye", eye);
+            program->set("M", command.localToWorld);
+            program->set("MIT", glm::transpose(glm::inverse(command.localToWorld)));
+            program->set("VP", VP);
+            ForwardRenderer::lightSetup(lEntities, program);
+            program->set("sky.top", this->sky_top);
+            program->set("sky.middle", this->sky_middle);
+            program->set("sky.bottom", this->sky_bottom);
+
+            // program->set("transform", VP * command.localToWorld);
+            mesh->draw();
         }
     }
 
@@ -188,37 +246,40 @@ namespace our
             }
             return false; });
 
-            // TODO: (Req 8) Get the camera ViewProjection matrix and store it in VP
-            glm::mat4 VP = camera->getProjectionMatrix(windowSize) * camera->getViewMatrix();
-            // TODO: (Req 8) Set the OpenGL viewport using windowSize
-            glViewport(0, 0, windowSize.x, windowSize.y);
-            // TODO: (Req 8) Set the clear color to black and the clear depth to 1
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClearDepth(1.0f);
-            // TODO: (Req 8) Set the color mask to true and the depth mask to true (to ensure the glClear will affect the framebuffer)
-            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-            glDepthMask(GL_TRUE);
-            // If there is a postprocess material, bind the framebuffer
-            if (postprocessMaterial)
-            {
-                // TODO: (Req 10) bind the framebuffer
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postprocessFrameBuffer);
-            }
 
-            // TODO: (Req 8) Clear the color and depth buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // TODO: (Req 8) Get the camera ViewProjection matrix and store it in VP
+        glm::mat4 VP = camera->getProjectionMatrix(windowSize) * camera->getViewMatrix();
+        // TODO: (Req 8) Set the OpenGL viewport using windowSize
+        glViewport(0, 0, windowSize.x, windowSize.y);
+        // TODO: (Req 8) Set the clear color to black and the clear depth to 1
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearDepth(1.0f);
+        // TODO: (Req 8) Set the color mask to true and the depth mask to true (to ensure the glClear will affect the framebuffer)
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glDepthMask(GL_TRUE);
+        // If there is a postprocess material, bind the framebuffer
+        if (postprocessMaterial)
+        {
+            // TODO: (Req 10) bind the framebuffer
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postprocessFrameBuffer);
+        }
+        std::vector<Entity *> lEntities = lightedEntities(world);
+        glm::vec3 eye = glm::vec3(camera->getOwner()->getLocalToWorldMatrix() * glm::vec4(glm::vec3(0, 0, 0), 1.0f));
+        // TODO: (Req 8) Clear the color and depth buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ForwardRenderer::excuteCommand(opaqueCommands, VP, lEntities, eye);
+        // TODO: (Req 8) Draw all the opaque commands
+        //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
+        // for (auto command : opaqueCommands)
+        // {
+        //     // Setup the pipline
+        //     command.material->setup();
+        //     // Set the transform uniform = model-view-projection matrix
+        //     command.material->shader->set("transform", VP * command.localToWorld);
+        //     // Draw the mesh
+        //     command.mesh->draw();
+        // }
 
-            // TODO: (Req 8) Draw all the opaque commands
-            //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-            for (auto command : opaqueCommands)
-            {
-                // Setup the pipline
-                command.material->setup();
-                // Set the transform uniform = model-view-projection matrix
-                command.material->shader->set("transform", VP * command.localToWorld);
-                // Draw the mesh
-                command.mesh->draw();
-            }
 
             // If there is a sky material, draw the sky
             if (this->skyMaterial)
@@ -252,23 +313,26 @@ namespace our
 
                 // TODO: (Req 9) set the "transform" uniform
 
-                // sky transform = MVP of sky * (force at z = 1 matrix)
-                skyMaterial->shader->set("transform", alwaysBehindTransform * VP * skyModelMatrix);
+            // sky transform = MVP of sky * (force at z = 1 matrix)
+            skyMaterial->shader->set("transform", alwaysBehindTransform * VP * skyModelMatrix);
+            skyMaterial->shader->set("VP", alwaysBehindTransform * VP);
+            skyMaterial->shader->set("M", skyModelMatrix);
+            // TODO: (Req 9) draw the sky sphere
+            skySphere->draw();
+        }
+        // TODO: (Req 8) Draw all the transparent commands
+        //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
+        // for (auto command : transparentCommands)
+        // {
+        //     // Setup the pipline
+        //     command.material->setup();
+        //     // Set the transform uniform = model-view-projection matrix
+        //     command.material->shader->set("transform", VP * command.localToWorld);
+        //     // Draw the mesh
+        //     command.mesh->draw();
+        // }
+        ForwardRenderer::excuteCommand(transparentCommands, VP, lEntities, eye);
 
-                // TODO: (Req 9) draw the sky sphere
-                skySphere->draw();
-            }
-            // TODO: (Req 8) Draw all the transparent commands
-            //  Don't forget to set the "transform" uniform to be equal the model-view-projection matrix for each render command
-            for (auto command : transparentCommands)
-            {
-                // Setup the pipline
-                command.material->setup();
-                // Set the transform uniform = model-view-projection matrix
-                command.material->shader->set("transform", VP * command.localToWorld);
-                // Draw the mesh
-                command.mesh->draw();
-            }
 
             // If there is a postprocess material, apply postprocessing
             if (postprocessMaterial)

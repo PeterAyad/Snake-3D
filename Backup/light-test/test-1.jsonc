@@ -1,0 +1,191 @@
+
+{
+    "start-scene": "com-light-test",
+    "window":
+    {
+        "title":"Component Light Renderer Test Window",
+        "size":{
+            "width":1000,
+            "height":700
+        },
+        "fullscreen": false
+    },
+    "screenshots":{
+        "directory": "screenshots/light-test",
+        "requests": [
+            { "file": "test-1.png", "frame":  1 }
+        ]
+    },
+    "scene": {
+        "renderer": {},
+        "assets":{
+            "shaders":{
+                "tinted":{
+                    "vs":"assets/shaders/tinted.vert",
+                    "fs":"assets/shaders/tinted.frag"
+                },
+                "textured":{
+                    "vs":"assets/shaders/textured.vert",
+                    "fs":"assets/shaders/textured.frag"
+                },
+                "lighted":{
+                    "vs":"assets/shaders/light.vert",
+                    "fs":"assets/shaders/light.frag"
+                }
+            },
+            "textures":{
+                "moon": "assets/textures/moon.jpg",
+                "grass": "assets/textures/grass_ground_d.jpg",
+                "monkey": "assets/textures/monkey.png",
+                "albedo": "assets/textures/images/albedo.jpg",
+                "specular": "assets/textures/images/specular.jpg",
+                "roughness": "assets/textures/images/roughness.jpg",
+                "ambientOcclusion": "assets/textures/images/ambient_occlusion.jpg",
+                "emissive": "assets/textures/images/emissive.jpg"
+            },
+            "meshes":{
+                "cube": "assets/models/cube.obj",
+                "monkey": "assets/models/Suzanne.obj",
+                "plane": "assets/models/plane.obj",
+                "sphere": "assets/models/sphere.obj"
+            },
+            "samplers":{
+                "default":{}
+            },
+            "materials":{
+                "metal":{
+                    "type": "lighted",
+                    "shader": "lighted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.8, 0.6, 0.5, 1],
+                    "texture": "monkey",
+                    "sampler": "default",
+                    "albedo_texture" : "albedo",
+                    "specular_texture": "specular",
+                    "roughness_texture": "roughness",
+                    "ambientOcclusion_texture": "ambientOcclusion",
+                    "emissive_texture": "emissive",
+                    "alpha_texture":"alpha"
+                },
+                "mymonkey":{
+                    "type": "lighted",
+                    "shader": "lighted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.8, 0.6, 0.5, 1],
+                    "texture": "monkey",
+                    "sampler": "default",
+                    "albedo_texture" : "albedo",
+                    "specular_texture": "specular",
+                    "roughness_texture": "roughness",
+                    "ambientOcclusion_texture": "ambientOcclusion",
+                    "emissive_texture": "emissive",
+                    "alpha_texture":"alpha"
+                }
+            }
+        },
+        "worldSky":{
+            "sky_top": [0.3, 0.6, 1.0],
+            "sky_middle": [0.3, 0.3, 0.3],
+            "sky_bottom":[0.1, 0.1, 0.0]
+        },
+        "world":[
+            {
+                "position": [0, 0, 2],
+                "components": [
+                    {
+                        "type": "Camera"
+                    }
+                ],
+                "children": [
+                    {
+                        "position": [1, 2.5, -5],
+                        "rotation": [90, 0, 0],
+                        "scale": [0.1, 0.1, 1.0],
+                        "components": [
+                            {
+                                "type": "Mesh Renderer",
+                                "mesh": "cube",
+                                "material": "metal"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "position": [3, 0, -3],
+                "rotation": [90, 0, 0],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "monkey",
+                        "material": "mymonkey"
+                    }
+                ]
+            },
+            {
+                "position": [0, 0, -1],
+                "rotation": [0, 90, 0],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "monkey",
+                        "material": "mymonkey"
+                    }
+                ]
+            },
+            {
+                "position": [-3, 0, -3],
+                "rotation": [0, 0, 45],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "monkey",
+                        "material": "mymonkey"
+                    }
+                ]
+            },
+            {
+                "position": [3, 0, -2],
+                "rotation": [90, 0, 0],
+                "components": [
+                    {
+                        "type": "Light Component",
+                        "lightType": "spot",
+                        "diffuse": [1,0.9,0.7],
+                        "specular":[1,0.9,0.7],
+                        "cone_angles": [45,90]
+
+                    }
+                ]
+            },
+            {
+                "position": [1, 0, 0],
+                "rotation": [0, 0, 0],
+                "components": [
+                    {
+                        "type": "Light Component",
+                        "lightType": "point",
+                        "diffuse": [1,0.2,0.1],
+                        "specular":[1,0.2,0.1],
+                        "attenuation": [1,0,0]
+
+                    }
+                ]
+            }
+        ]
+    }
+}

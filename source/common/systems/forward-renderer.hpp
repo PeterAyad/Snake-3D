@@ -4,7 +4,7 @@
 #include "../components/camera.hpp"
 #include "../components/mesh-renderer.hpp"
 #include "../asset-loader.hpp"
-
+#include "../components/light.hpp"
 #include <glad/gl.h>
 #include <vector>
 #include <algorithm>
@@ -43,6 +43,11 @@ namespace our
         Texture2D *colorTarget, *depthTarget;
         TexturedMaterial *postprocessMaterial;
 
+        glm::vec3 sky_top;
+        glm::vec3 sky_middle;
+        glm::vec3 sky_bottom;
+
+
     public:
         // Initialize the renderer including the sky and the Postprocessing objects.
         // windowSize is the width & height of the window (in pixels).
@@ -50,7 +55,33 @@ namespace our
         // Clean up the renderer
         void destroy();
         // This function should be called every frame to draw the given world
-        void render(World *world, bool enablePostProcessing = true);
+
+//         void render(World *world, bool enablePostProcessing = true);
+
+        void render(World *world);
+
+        std::vector<Entity *> lightedEntities(World *world);
+        void lightSetup(std::vector<Entity *> entities, ShaderProgram *program);
+        void excuteCommand(std::vector<RenderCommand> commands, glm::mat4 VP, std::vector<Entity *> lEntities, glm::vec3 eye);
+        void deserialize(const nlohmann::json &data)
+        {
+            if (data.contains("sky_top"))
+            {
+                std::vector<float> v = data["sky_top"];
+                sky_top = glm::vec3(v[0], v[1], v[2]);
+            }
+            if (data.contains("sky_middle"))
+            {
+                std::vector<float> v = data["sky_middle"];
+                sky_middle = glm::vec3(v[0], v[1], v[2]);
+            }
+            if (data.contains("sky_bottom"))
+            {
+                std::vector<float> v = data["sky_bottom"];
+                sky_bottom = glm::vec3(v[0], v[1], v[2]);
+            }
+        }
+
     };
 
 }
