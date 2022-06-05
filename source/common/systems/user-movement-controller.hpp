@@ -150,6 +150,7 @@ namespace our
             }
         }
 
+        // This function guarantees infinite plane
         glm::vec3 checkPosition(glm::vec3 position)
         {
             float x = position.x;
@@ -179,7 +180,7 @@ namespace our
             // Remove the corners that are older than the maximum age
             for (int i = cornersAge.size() - 1; i >= 0; i--)
             {
-                if (cornersAge[i] > (snakeParts.size() * 2))
+                if (cornersAge[i] > (snakeParts.size() * 3))
                 {
                     cornerPositions.erase(cornerPositions.begin() + i);
                     cornersAge.erase(cornersAge.begin() + i);

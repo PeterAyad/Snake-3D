@@ -35,7 +35,7 @@ namespace our
         {
             // Detect if snake head collides with an apple (snake ate an apple)
             handleSnakeEatingApple(world);
-
+            
             // Detect if snake head collides with itself (snake ate itself)
             handleSnakeEatingSelf(world);
         }
