@@ -56,9 +56,9 @@ namespace our
         void destroy();
         // This function should be called every frame to draw the given world
 
-//         void render(World *world, bool enablePostProcessing = true);
+        void render(World *world, bool enablePostProcessing = true);
 
-        void render(World *world);
+        // void render(World *world);
 
         std::vector<Entity *> lightedEntities(World *world);
         void lightSetup(std::vector<Entity *> entities, ShaderProgram *program);

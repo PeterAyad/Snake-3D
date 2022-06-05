@@ -23,6 +23,10 @@
                 "textured":{
                     "vs":"assets/shaders/textured.vert",
                     "fs":"assets/shaders/textured.frag"
+                },
+                "lighted":{
+                    "vs":"assets/shaders/light.vert",
+                    "fs":"assets/shaders/light.frag"
                 }
             },
             "textures":{
@@ -115,8 +119,8 @@
                     "sampler": "default"
                 },
                 "skin":{
-                    "type": "textured",
-                    "shader": "textured",
+                    "type": "lighted",
+                    "shader": "lighted",
                     "pipelineState": {
                         "faceCulling":{
                             "enabled": false
@@ -127,7 +131,12 @@
                     },
                     "tint": [1, 1, 1, 1],
                     "texture": "skin",
-                    "sampler": "default"
+                    "sampler": "default",
+                    "albedo_texture" : "skin",
+                    "specular_texture": "skin",
+                    "roughness_texture": "skin",
+                    "ambientOcclusion_texture": "skin",
+                    "alpha_texture":"alpha"
                 },
                 "sand":{
                     "type": "textured",
@@ -190,6 +199,11 @@
                     "sampler": "default"
                 }
             }
+        },
+        "worldSky":{
+            "sky_top": [0.3, 0.6, 1.0],
+            "sky_middle": [0.3, 0.3, 0.3],
+            "sky_bottom":[0.1, 0.1, 0.0]
         },
         "world":[
             {
@@ -312,6 +326,20 @@
                         "type": "Mesh Renderer",
                         "mesh": "cherry",
                         "material": "apple"
+                    }
+                ]
+            },
+            {
+                "position": [1, 0, 0],
+                "rotation": [0, 0, 0],
+                "components": [
+                    {
+                        "type": "Light Component",
+                        "lightType": "point",
+                        "diffuse": [1,0.2,0.1],
+                        "specular":[1,0.2,0.1],
+                        "attenuation": [1,0,0]
+
                     }
                 ]
             }
