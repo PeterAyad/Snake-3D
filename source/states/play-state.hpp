@@ -36,9 +36,11 @@ class Playstate : public our::State
         }
         // We initialize the camera controller system since it needs a pointer to the app
         cameraController.enter(getApp());
+        // We initialize the collision handler system since it needs a pointer to the app, the state and a pointer to the game over flag
         collisionHandler.enter(this, getApp(), gameOver);
-        userMovementController.enter(getApp(), this, gameOver);
-        // Then we initialize the renderer
+        // We initialize the user movement controller system since it needs a pointer to the app, the state and a pointer to the game over flag
+        userMovementController.enter(this, getApp(), gameOver);
+        // Then we initialize the renderer and set the sky element
         auto size = getApp()->getFrameBufferSize();
         renderer.initialize(size, config["renderer"]);
         renderer.deserialize(config["worldSky"]);

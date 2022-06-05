@@ -48,8 +48,12 @@ namespace our
         }
     }
 
+
+    // This function returns the boundaries of the entity in world space
+    // Assuming the function is a cube (for AABB collision)
     std::vector<glm::vec3> Entity::getBoundariesInWorldSpace(glm::ivec2 windowSize)
     {
+        // 1. Get the camera entity
         CameraComponent *camera = nullptr;
         for (auto entity : world->getEntities())
         {
@@ -57,8 +61,14 @@ namespace our
             if (!camera)
                 camera = entity->getComponent<CameraComponent>();
         }
+
+        // 2. Get the view projection matrix
         glm::mat4 VP = camera->getProjectionMatrix(windowSize) * camera->getViewMatrix();
+
+        // 3. Get the extreme vertices of the entity in its local space
         std::vector<glm::vec3> boundaries = getComponent<MeshRendererComponent>()->mesh->boundaries;
+
+        // 4. Transform the vertices to world space using MVP matrices
         for (int i = 0; i < boundaries.size(); i++)
         {
             boundaries[i] = glm::vec3(VP * getLocalToWorldMatrix() * glm::vec4(boundaries[i], 1.0f));

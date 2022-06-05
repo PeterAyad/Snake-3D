@@ -21,7 +21,9 @@ namespace our
         GLsizei elementCount;
 
     public:
+        // This vector holds the extreme vertices of the mesh in local space
         std::vector<glm::vec3> boundaries;
+
         // The constructor takes two vectors:
         // - vertices which contain the vertex data.
         // - elements which contain the indices of the vertices out of which each rectangle will be constructed.
@@ -32,7 +34,9 @@ namespace our
         Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &elements)
         {
 
+            // The first thing we need to do is to store the extreme vertices of the mesh in local space to be used later as boundaries
             setBoundaries(vertices);
+
             // TODO: (Req 1) Write this function
             //  remember to store the number of elements in "elementCount" since you will need it for drawing
             //  For the attribute locations, use the constants defined above: ATTRIB_LOC_POSITION, ATTRIB_LOC_COLOR, etc
@@ -74,14 +78,18 @@ namespace our
             glEnableVertexAttribArray(ATTRIB_LOC_NORMAL);
         }
 
+        // This function is used to set the boundaries of the mesh in local space
         void setBoundaries(const std::vector<Vertex> &vertices)
         {
+            // Assume the first vertex is the extreme vertex of the mesh in all directions
             glm::vec3 pointOfLowestX = vertices[0].position;
             glm::vec3 pointOfLowestY = vertices[0].position;
             glm::vec3 pointOfLowestZ = vertices[0].position;
             glm::vec3 pointOfHighestX = vertices[0].position;
             glm::vec3 pointOfHighestY = vertices[0].position;
             glm::vec3 pointOfHighestZ = vertices[0].position;
+
+            // Loop through all the vertices and find the extreme ones in each direction
             for (auto vertex : vertices)
             {
                 if (vertex.position.x < pointOfLowestX.x)
@@ -97,6 +105,8 @@ namespace our
                 if (vertex.position.z > pointOfHighestZ.z)
                     pointOfHighestZ = vertex.position;
             }
+
+            // Store the extreme vertices in local space
             boundaries.push_back(pointOfLowestX);
             boundaries.push_back(pointOfLowestY);
             boundaries.push_back(pointOfLowestZ);
