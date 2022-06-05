@@ -274,7 +274,7 @@
                 "position": [0, -10, -10],
                 "rotation": [0, 90, 0],
                 "scale": [2, 2, 2],
-                "name":"snake_body0",
+                "name":"snake_part",
                 "components": [
                     {
                         "type": "Mesh Renderer",

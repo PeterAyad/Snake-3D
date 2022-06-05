@@ -25,7 +25,6 @@ namespace our
     const int RIGHT = 3;
     int speed = 8;
 
-    std::map<int, int> cornersToBeRemoved;
     std::map<std::string, float> cornerRotations;
     std::vector<std::pair<glm::vec3, std::string>> cornerPositions;
 
@@ -77,7 +76,7 @@ namespace our
                 {
                     tail = entity;
                 }
-                else if (entity->name.rfind("snake", 0) == 0)
+                else if (entity->name == "snake_part")
                 {
                     snakeParts.push_back(entity);
                 }
@@ -90,12 +89,39 @@ namespace our
                 return;
             }
 
+
+            // std:: cout << "snake parts size: " << snakeParts.size() << std::endl;
+            std::vector<Entity *> orderedSnakeParts;
+            orderedSnakeParts.push_back(snakeParts[0]);
+            std::vector<int> taken(snakeParts.size(), 0);
+
+            for (int i = 0; i < snakeParts.size() - 2; i++)
+            {
+                float distance = (float)INT_MAX;
+                int nextIndex = 0;
+
+                for (int j = 1; j < snakeParts.size() - 1; j++)
+                {
+
+                    float d = glm::distance(snakeParts[i]->localTransform.position, snakeParts[j]->localTransform.position);
+                    if (d < distance and taken[j] == 0)
+                    {
+                        distance = d;
+                        nextIndex = i;
+                    }
+                }
+                orderedSnakeParts.push_back(snakeParts[nextIndex]);
+                taken[nextIndex] = 1;
+            }
+            orderedSnakeParts.push_back(snakeParts[snakeParts.size() - 1]);
+            // std:: cout << "ordered parts size: " << orderedSnakeParts.size() << std::endl;
+
             auto now = std::chrono::high_resolution_clock::now();
 
             /* Getting number of milliseconds as an integer. */
             int ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count();
 
-            if (ms_int > (1000-speed*100))
+            if (ms_int > (1000 - speed * 100))
             {
                 updateDirection = true;
                 int newDirection = lastDirection;
@@ -116,14 +142,14 @@ namespace our
                     newDirection = RIGHT;
                 }
 
-                updatePositions(newDirection, lastDirection, snakeParts);
+                updatePositions(newDirection, lastDirection, orderedSnakeParts);
 
                 if (updateDirection)
                 {
                     lastDirection = newDirection;
                 }
 
-                updateMesh(snakeParts);
+                updateMesh(orderedSnakeParts);
                 lastTime = now;
             }
         }
@@ -306,15 +332,18 @@ namespace our
             //     }
             // }
 
+            // find part just before the tail
+            int beforeTailIndex = snakeParts.size() - 2;
+
             // update tail direction
             snakeParts[snakeParts.size() - 1]->getComponent<MeshRendererComponent>()->setMesh("tail");
-            if (snakeParts[snakeParts.size() - 2]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(0.0f, 0.0f, -1.0f))
+            if (snakeParts[beforeTailIndex]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(0.0f, 0.0f, -1.0f))
                 snakeParts[snakeParts.size() - 1]->localTransform.rotation = glm::vec3(0.0f, glm::radians(90.0f), 0.0f);
-            else if (snakeParts[snakeParts.size() - 2]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(0.0f, 0.0f, 1.0f))
+            else if (snakeParts[beforeTailIndex]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(0.0f, 0.0f, 1.0f))
                 snakeParts[snakeParts.size() - 1]->localTransform.rotation = glm::vec3(0.0f, glm::radians(270.0f), 0.0f);
-            else if (snakeParts[snakeParts.size() - 2]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(-1.0f, 0.0f, 0.0f))
+            else if (snakeParts[beforeTailIndex]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(-1.0f, 0.0f, 0.0f))
                 snakeParts[snakeParts.size() - 1]->localTransform.rotation = glm::vec3(0.0f, glm::radians(180.0f), 0.0f);
-            else if (snakeParts[snakeParts.size() - 2]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(1.0f, 0.0f, 0.0f))
+            else if (snakeParts[beforeTailIndex]->getComponent<MovementComponent>()->linearVelocity == glm::vec3(1.0f, 0.0f, 0.0f))
                 snakeParts[snakeParts.size() - 1]->localTransform.rotation = glm::vec3(0.0f, glm::radians(0.0f), 0.0f);
 
             // update head direction
