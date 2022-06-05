@@ -416,5 +416,118 @@
                 ]
             }
         ]
+    },
+    "menu": {
+        "renderer": {
+            "sky": "assets/textures/sand.jpg"
+        },
+        "assets":{
+            "shaders":{
+                "lighted":{
+                    "vs":"assets/shaders/light.vert",
+                    "fs":"assets/shaders/light.frag"
+                }
+            },
+            "textures":{
+                "monkey": "assets/textures/moon.png",
+                "albedo": "assets/textures/moon.png",
+                "specular": "assets/textures/moon.png",
+                "roughness": "assets/textures/moon.png",
+                "ambientOcclusion": "assets/textures/moon.png",
+                "emissive": "assets/textures/skin.jpg"
+            },
+            "meshes":{
+                "cube": "assets/models/cube.obj",
+                "monkey": "assets/models/monkey.obj",
+                "plane": "assets/models/plane.obj",
+                "sphere": "assets/models/sphere.obj",
+                "menu": "assets/models/menu.obj",
+                "menu1": "assets/models/menu1.obj",
+                "menu2": "assets/models/menu2.obj"
+            },
+            "samplers":{
+                "default":{}
+            },
+            "materials":{
+                "menu":{
+                    "type": "lighted",
+                    "shader": "lighted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.8, 0.6, 0.5, 1],
+                    "texture": "monkey",
+                    "sampler": "default",
+                    "albedo_texture" : "albedo",
+                    "specular_texture": "specular",
+                    "roughness_texture": "roughness",
+                    "ambientOcclusion_texture": "ambientOcclusion",
+                    "emissive_texture": "emissive",
+                    "alpha_texture":"alpha"
+                }
+            }
+        },
+        "worldSky":{
+            "sky_top": [0.127, 0.149, 0.133],
+            "sky_middle": [0.3, 0.3, 0.3],
+            "sky_bottom":[0.1, 0.1, 0.0]
+        },
+        "world":[
+            {
+                "position": [0, 1, 0],
+                "rotation" :[30,0,0],
+                "components": [
+                    {
+                        "type": "Camera"
+                        //"cameraType": "orthograpic"
+                    },
+                    {
+                        "type": "Free Camera Controller"
+                    }
+                ]
+            },
+            {
+                "position": [0, 0.8, -2],
+                "rotation": [0, 0, 0],
+                "scale" : [0.008,0.008,0.008],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "menu",
+                        "material": "menu"
+                    }
+                ]
+            },
+            {
+                "position": [0, 0, -2],
+                "rotation": [0, 0, 0],
+                "scale" : [0.008,0.008,0.008],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "menu1",
+                        "material": "menu"
+                    }
+                ]
+            },
+            {
+                "position": [0, -0.5, -2],
+                "rotation": [0, 0, 0],
+                "scale" : [0.008,0.008,0.008],
+                "components": [
+                    {
+                        "type": "Mesh Renderer",
+                        "mesh": "menu2",
+                        "material": "menu"
+                    }
+                ]
+            }
+        ]
     }
+    
 }

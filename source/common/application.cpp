@@ -291,6 +291,20 @@ int our::Application::run(int run_for_frames) {
                 std::cerr << "Failed to save a Screenshot" << std::endl;
             }
         }
+        // If ESC is pressed, change state
+        if(keyboard.justPressed(GLFW_KEY_ESCAPE)){
+            /*
+            *   switch between the main game and menu states
+            */
+            if(currentState == states["main"])
+                this->changeState("menu");
+            else
+                this->changeState("main");
+        }
+        // If q key is pressed hwile being in menu state, exit the game
+        if(keyboard.justPressed(GLFW_KEY_Q) ){
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
         // There are any requested screenshots, take them
         while(requested_screenshots.size()){ 
             if(const auto& request = requested_screenshots.top(); request.first == current_frame){
@@ -319,6 +333,12 @@ int our::Application::run(int run_for_frames) {
             nextState = nullptr;
             // Initialize the new scene
             currentState->onInitialize();
+            /*
+            if(currentState != states["main"]) 
+                {
+                    currentState->onInitialize();
+                }
+                */
         }
 
         ++current_frame;
