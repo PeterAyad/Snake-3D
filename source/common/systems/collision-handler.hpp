@@ -41,7 +41,8 @@ namespace our
         }
 
         // Detect if snake head collides with itself (snake ate itself)
-        void handleSnakeEatingSelf(World *world)
+        void
+        handleSnakeEatingSelf(World *world)
         {
             // Get all the snake parts (entities)
             std::vector<Entity *> snakeParts;
