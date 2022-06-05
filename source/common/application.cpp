@@ -301,9 +301,16 @@ int our::Application::run(int run_for_frames) {
             else
                 this->changeState("main");
         }
-        // If q key is pressed hwile being in menu state, exit the game
-        if(keyboard.justPressed(GLFW_KEY_Q) ){
+        // If q key is pressed while being in menu state, exit the game
+        if((currentState == states["menu"]) && keyboard.justPressed(GLFW_KEY_Q)){
             glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
+        // If r key is pressed while being in menu state, repeat the game
+        if((currentState == states["menu"]) && keyboard.justPressed(GLFW_KEY_R) ){
+            initializedMain = false;
+            this->changeState("main");
+            // If a scene was already running, destroy it
+            //if(nextState) nextState     
         }
         // There are any requested screenshots, take them
         while(requested_screenshots.size()){ 
@@ -327,18 +334,17 @@ int our::Application::run(int run_for_frames) {
         // If a scene change was requested, apply it
         while(nextState){
             // If a scene was already running, destroy it (not delete since we can go back to it later)
-            if(currentState) currentState->onDestroy();
+            //if( (currentState != states["main"])) currentState->onDestroy();
             // Switch scenes
             currentState = nextState;
             nextState = nullptr;
             // Initialize the new scene
-            currentState->onInitialize();
-            /*
-            if(currentState != states["main"]) 
+            if( (currentState != states["main"]) || ((currentState == states["main"]) && !initializedMain))
                 {
                     currentState->onInitialize();
+                    initializedMain = true;
                 }
-                */
+                
         }
 
         ++current_frame;

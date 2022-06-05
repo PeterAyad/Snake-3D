@@ -62,7 +62,7 @@ namespace our {
         std::unordered_map<std::string, State*> states;   // This will store all the states that the application can run
         State * currentState = nullptr;         // This will store the current scene that is being run
         State * nextState = nullptr;            // If it is requested to go to another scene, this will contain a pointer to that scene
-
+        bool initializedMain;               //this is a boolean to avoid re initializing the game every time the user pauses the game
         
         // Virtual functions to be overrode and change the default behaviour of the application
         // according to the example needs.
@@ -73,7 +73,9 @@ namespace our {
     public:
 
         // Create an application with following configuration
-        Application(const nlohmann::json& app_config) : app_config(app_config) {}
+        Application(const nlohmann::json& app_config) : app_config(app_config) {
+            initializedMain = false;
+        }
         // On destruction, delete all the states
         ~Application(){ for (auto &it : states) delete it.second; }
 
