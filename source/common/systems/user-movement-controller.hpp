@@ -117,6 +117,7 @@ namespace our
 
                 // If no user input is detected, then set the direction of motion to the last direction the user moved
                 int newDirection = lastDirection;
+
                 // If user gave an input, then set the direction of motion to the input
                 if (app->getKeyboard().isPressed(GLFW_KEY_UP))
                 {
@@ -149,6 +150,26 @@ namespace our
             }
         }
 
+        glm::vec3 checkPosition(glm::vec3 position)
+        {
+            float x = position.x;
+            if (x > 29.0f)
+                x = -29.0f;
+            else if (x < -29.0f)
+                x = 29.0f;
+            else
+                x = x;
+            float y = -10.0f;
+            float z = position.z;
+            if (z > -2.0f)
+                z = -36.0f;
+            else if(z<-35.0f)
+                z = -1.0f;
+            else
+                z = z;
+            return glm::vec3(x, y, z);
+        }
+
         // This function updates the corners ages and remove the oldest ones assuming they are no longer needed
         void removeOldCorners(std::vector<Entity *> snakeParts)
         {
@@ -168,12 +189,12 @@ namespace our
 
         // This function updates the position, direction of the snake head according to the direction of motion
         // It also add corners if needed
-        void updateSnakeHeadChanges(Entity *snakeHead, glm::vec3 linearVelocity, glm::vec3 positionChange, std::string cornerDirection = "")
+        void updateSnakeHeadChanges(int newDirection, int lastDirection, std::vector<Entity *> snakeParts, Entity *snakeHead, glm::vec3 linearVelocity, glm::vec3 positionChange, std::string cornerDirection = "")
         {
             snakeHead->getComponent<MovementComponent>()->linearVelocity = linearVelocity;
             if (cornerDirection != "")
                 addCorner(snakeHead->localTransform.position, cornerDirection);
-            snakeHead->localTransform.position = snakeHead->localTransform.position + positionChange;
+            snakeHead->localTransform.position = checkPosition(snakeHead->localTransform.position + positionChange);
         }
 
         // This function updates the positions of the snake parts according to the direction of motion (direction of motion is stored in the linearVelocity variable of MovementComponent)
@@ -197,46 +218,46 @@ namespace our
             case UP:
                 if (newDirection == UP || newDirection == DOWN)
                 {
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
                     updateDirection = false;
                 }
                 else if (newDirection == LEFT)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f), "upleft");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f), "upleft");
                 else if (newDirection == RIGHT)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f), "upright");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f), "upright");
                 break;
             case DOWN:
                 if (newDirection == UP || newDirection == DOWN)
                 {
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f));
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f));
                     updateDirection = false;
                 }
                 else if (newDirection == LEFT)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f), "downleft");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f), "downleft");
                 else if (newDirection == RIGHT)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f), "downright");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f), "downright");
                 break;
             case RIGHT:
                 if (newDirection == LEFT || newDirection == RIGHT)
                 {
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f));
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 0.0f, 0.0f));
                     updateDirection = false;
                 }
                 else if (newDirection == UP)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f), "downleft");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f), "downleft");
                 else if (newDirection == DOWN)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f), "upleft");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f), "upleft");
                 break;
             case LEFT:
                 if (newDirection == LEFT || newDirection == RIGHT)
                 {
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
                     updateDirection = false;
                 }
                 else if (newDirection == UP)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f), "downright");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -2.0f), "downright");
                 else if (newDirection == DOWN)
-                    updateSnakeHeadChanges(snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f), "upright");
+                    updateSnakeHeadChanges(newDirection, lastDirection, snakeParts, snakeParts[0], glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 2.0f), "upright");
                 break;
             }
         }

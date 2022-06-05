@@ -196,6 +196,27 @@
                     "texture": "moon",
                     "sampler": "default"
                 },
+                "menu":{
+                    "type": "lighted",
+                    "shader": "lighted",
+                    "pipelineState": {
+                        "faceCulling":{
+                            "enabled": false
+                        },
+                        "depthTesting":{
+                            "enabled": true
+                        }
+                    },
+                    "tint": [0.8, 0.6, 0.5, 1],
+                    "texture": "monkey",
+                    "sampler": "default",
+                    "albedo_texture" : "moon",
+                    "specular_texture": "moon",
+                    "roughness_texture": "moon",
+                    "ambientOcclusion_texture": "moon",
+                    "emissive_texture": "moon",
+                    "alpha_texture":"alpha"
+                },
                 "apple":{
                     "type": "lighted",
                     "shader": "lighted",
@@ -243,7 +264,7 @@
                             {
                                 "type": "Mesh Renderer",
                                 "mesh": "score",
-                                "material": "metal"
+                                "material": "menu"
                             }
                         ]
                     },{
@@ -255,7 +276,7 @@
                             {
                                 "type": "Mesh Renderer",
                                 "mesh": "num0",
-                                "material": "metal"
+                                "material": "menu"
                             }
                         ]
                     },{
@@ -267,7 +288,7 @@
                             {
                                 "type": "Mesh Renderer",
                                 "mesh": "num0",
-                                "material": "metal"
+                                "material": "menu"
                             }
                         ]
                     }
@@ -277,6 +298,7 @@
                 "position": [0, -10, -20],
                 "rotation": [-90, 0, 0],
                 "scale": [30, 20, 1],
+                "name":"ground",
                 "components": [
                     {
                         "type": "Mesh Renderer",
