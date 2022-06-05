@@ -76,45 +76,67 @@ namespace our
                 {
                     tail = entity;
                 }
-                else if (entity->name == "snake_part")
+                else if (entity->name.rfind("snake_part", 0) == 0)
                 {
                     snakeParts.push_back(entity);
                 }
             }
-            snakeParts.insert(snakeParts.begin(), head);
-            snakeParts.push_back(tail);
 
             if (snakeParts.size() == 0)
             {
                 return;
             }
 
+            std::sort(snakeParts.begin(), snakeParts.end(), [](const Entity *a, const Entity *b)
+                      { 
+                          // Assume that function asks for greater than
+                          std::string strA= a->name.substr(10);
+                          std::string strB= b->name.substr(10);
+                          if(strB.empty())
+                          {
+                              return true;
+                          }
+                          if(strA.empty())
+                          {
+                              return false;
+                          }
+                          else{
+                              return ((std::stoi(strA))>(std::stoi(strB)));
+                          } });
+            snakeParts.insert(snakeParts.begin(), head);
+            snakeParts.push_back(tail);
 
-            // std:: cout << "snake parts size: " << snakeParts.size() << std::endl;
-            std::vector<Entity *> orderedSnakeParts;
-            orderedSnakeParts.push_back(snakeParts[0]);
-            std::vector<int> taken(snakeParts.size(), 0);
+            // // std:: cout << "snake parts size: " << snakeParts.size() << std::endl;
+            // std::vector<Entity *> orderedSnakeParts;
+            // orderedSnakeParts.push_back(snakeParts[0]);
+            // std::vector<int> taken(snakeParts.size(), 0);
+            // taken[0] = 1;
 
-            for (int i = 0; i < snakeParts.size() - 2; i++)
+            // for (int i = 0; i < snakeParts.size() - 2; i++)
+            // {
+            //     float distance = 2134235123.0f;
+            //     int nextIndex = 0;
+
+            //     for (int j = 1; j < snakeParts.size() - 1; j++)
+            //     {
+            //         float d = glm::distance(snakeParts[i]->localTransform.position, snakeParts[j]->localTransform.position);
+            //         if (d < distance && taken[j] == 0)
+            //         {
+            //             distance = d;
+            //             nextIndex = j;
+            //         }
+            //     }
+            //     orderedSnakeParts.push_back(snakeParts[nextIndex]);
+            //     taken[nextIndex] = 1;
+            // }
+            // orderedSnakeParts.push_back(snakeParts[snakeParts.size() - 1]);
+            // // std:: cout << "ordered parts size: " << orderedSnakeParts.size() << std::endl;
+
+            for (auto entity : snakeParts)
             {
-                float distance = (float)INT_MAX;
-                int nextIndex = 0;
-
-                for (int j = 1; j < snakeParts.size() - 1; j++)
-                {
-
-                    float d = glm::distance(snakeParts[i]->localTransform.position, snakeParts[j]->localTransform.position);
-                    if (d < distance and taken[j] == 0)
-                    {
-                        distance = d;
-                        nextIndex = i;
-                    }
-                }
-                orderedSnakeParts.push_back(snakeParts[nextIndex]);
-                taken[nextIndex] = 1;
+                std::cout << entity->name << std::endl;
             }
-            orderedSnakeParts.push_back(snakeParts[snakeParts.size() - 1]);
-            // std:: cout << "ordered parts size: " << orderedSnakeParts.size() << std::endl;
+            std::cout << "==============" << std::endl;
 
             auto now = std::chrono::high_resolution_clock::now();
 
@@ -142,14 +164,14 @@ namespace our
                     newDirection = RIGHT;
                 }
 
-                updatePositions(newDirection, lastDirection, orderedSnakeParts);
+                updatePositions(newDirection, lastDirection, snakeParts);
 
                 if (updateDirection)
                 {
                     lastDirection = newDirection;
                 }
 
-                updateMesh(orderedSnakeParts);
+                updateMesh(snakeParts);
                 lastTime = now;
             }
         }

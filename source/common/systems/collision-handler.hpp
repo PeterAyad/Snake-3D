@@ -108,7 +108,7 @@ namespace our
         {
             std::cout << "Snake ate an apple" << std::endl;
             our::Entity *newpart = snakeHead->getWorld()->add();
-            newpart->name = "snake_part";
+            newpart->name = "snake_part"+std::to_string(score);
             newpart->localTransform = snakeHead->localTransform;
 
             newpart->addComponent<MeshRendererComponent>();
