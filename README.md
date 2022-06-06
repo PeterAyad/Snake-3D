@@ -6,7 +6,11 @@
 ![Demo Screenshot](./Demo%20Screenshots/ss3.png)
 
 # To Run The Game
-
-```bash
-./bin/GAME_APPLICATION -c="config/game.jsonc"
-```
+1. Build
+   ```bash
+   mkdir build && cd build  && cmake .. && make && cd ..  
+   ```
+2. Execute
+   ```bash
+   ./bin/GAME_APPLICATION -c="config/game.jsonc"
+   ```
